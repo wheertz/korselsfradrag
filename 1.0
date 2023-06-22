@@ -1,0 +1,98 @@
+using System;
+
+namespace Kørselsfradrag
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var kf = new Kørselsfradrag(24);
+            Console.Write("Indtast antal kilometer: ");
+
+            var km = Console.ReadLine();
+
+            bool succes = Int32.TryParse(km, out int res);
+
+            if (succes)
+            {
+                double resultat = kf.beregnKørsel(res);
+                Console.WriteLine("Kører du over broer?");
+                Console.WriteLine("1. Storebæltsbroen (Bil/motorcykel)");
+                Console.WriteLine("2. Storebæltsbroen (Tog/offentlig transport)");
+                Console.WriteLine("3. Øresundsbroen (Bil/motorcykel)");
+                Console.WriteLine("4. Øresundsbroen (Tog/offentlig transport)");
+                Console.WriteLine("5. Nej");
+                int bro = Convert.ToInt32(Console.ReadLine());
+
+                resultat = resultat + kf.BeregnBrotillæg(bro);
+                //resultat += kf.BeregnBrotillæg(bro);
+
+                Console.WriteLine(resultat);
+            }
+            else
+            {
+                Console.WriteLine("Det du har indtastet er ugyldigt!");
+            }
+            Console.ReadKey();
+        }
+    }
+
+    class Kørselsfradrag
+    {
+        public Kørselsfradrag(int ikkeBetalteKm)
+        {
+            IkkeBetalteKm = ikkeBetalteKm;
+        }
+
+        public int IkkeBetalteKm { get; }
+
+        private const double _kronerPrKm = 2.1;
+        private const double kronerPrKmOver120 = 1.1;
+        private const double udbetaltProcentSats = 0.26;
+
+        public double beregnKørsel(int km)
+        {
+            double result = 0;
+            if (km <= IkkeBetalteKm)
+            {
+                result = 0;
+            }
+            else if (km >= 25 && km <= 120)
+            {
+                result = km * _kronerPrKm * udbetaltProcentSats;
+            }
+            else if (km > 120)
+            {
+                result = km * kronerPrKmOver120 * udbetaltProcentSats;
+            }
+
+
+            return result;
+        }
+        public double BeregnBrotillæg(int bro)
+        {
+         int resultat = 0;
+            switch (bro)
+            {
+                case 1:
+                    resultat += 110;
+                    break;
+                case 2:
+                    resultat += 15;
+                    break;
+                case 3:
+                    resultat += 50;
+                    break;
+                case 4:
+                    resultat += 8;
+                    break;
+                case 5:
+                    break;
+                default:
+                    break;
+
+            }
+            return resultat;
+        }
+    }
+}
